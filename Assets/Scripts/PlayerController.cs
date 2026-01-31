@@ -20,6 +20,7 @@ public class PlayerController : MonoBehaviour
     private RaycastHit hitData;
     private LayerMask layerMaskObjects;
     private LayerMask layerMaskGround;
+    private LayerMask layerMaskMasks;
     private Vector3 playerVelocity;
 
     private float gravity = -9.81f;
@@ -48,6 +49,7 @@ public class PlayerController : MonoBehaviour
     {
         layerMaskObjects = LayerMask.GetMask("Interactable Object");
         layerMaskGround = LayerMask.GetMask("Ground");
+        layerMaskMasks = LayerMask.GetMask("Mask");
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -218,6 +220,21 @@ public class PlayerController : MonoBehaviour
             cam.nearClipPlane = CAM_NEAR_PLAIN_OG;
             cam.farClipPlane = CAM_FAR_PLAIN_OG;
         }
+    }
+
+    public Masks PickUpMask() 
+    {
+        if (Physics.Raycast(ray.origin, ray.direction, out hitData, DISTANCE, layerMaskMasks))
+        {
+            if (hitData.transform.gameObject)
+            {
+                MaskObject mask = hitData.transform.gameObject.GetComponent<MaskObject>();
+                hitData.transform.gameObject.SetActive(false);
+                return mask.mask;
+            }
+        }
+
+        return Masks.NONE;
     }
 
     bool IsGrounded()

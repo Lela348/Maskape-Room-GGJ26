@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -13,8 +14,11 @@ public class GameManager : MonoBehaviour
 
     private Animator[] animators;
     private GameObject[] objects;
+    private PlayerController playerController;
 
     private Masks activeMask = Masks.NONE;
+    private Dictionary<Masks, bool> unlockedMasks = new Dictionary<Masks, bool>();
+
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -22,6 +26,14 @@ public class GameManager : MonoBehaviour
         animators = FindObjectsOfType<Animator>();
         objects = GameObject.FindGameObjectsWithTag("Interactable Object");
         maskEffects = GameObject.FindGameObjectWithTag("MaskEffects").GetComponent<MaskEffects>();
+        playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+
+        Masks[] maskArray = (Masks[])Enum.GetValues(typeof(Masks));
+        foreach (Masks mask in maskArray)
+        {
+            unlockedMasks.Add(mask, false);
+        }
+        unlockedMasks[Masks.NONE] = true;
     }
 
     public void ChangeAnimationSpeed(InputAction.CallbackContext context)
@@ -82,16 +94,37 @@ public class GameManager : MonoBehaviour
             Masks[] maskArray = (Masks[])Enum.GetValues(typeof(Masks));
             Masks newMask = maskArray[maskId];
 
-            if(newMask != activeMask && newMask != Masks.NONE)
+            if (unlockedMasks[newMask])
             {
-                maskEffects.DeactivateMask(activeMask);
-                maskEffects.ActivateMask(newMask);
-                activeMask = newMask;
+                if (newMask != activeMask && newMask != Masks.NONE)
+                {
+                    maskEffects.DeactivateMask(activeMask);
+                    maskEffects.ActivateMask(newMask);
+                    activeMask = newMask;
+                }
+                else
+                {
+                    maskEffects.DeactivateMask(activeMask);
+                    activeMask = Masks.NONE;
+                }
             }
             else
             {
-                maskEffects.DeactivateMask(activeMask);
-                activeMask = Masks.NONE;
+                Debug.Log("MASK NOT UNLOCKED");
+            }
+        }
+    }
+
+    public void UnlockMask(InputAction.CallbackContext context)
+    {
+        if (context.started && context.interaction is PressInteraction)
+        {
+            Masks mask = playerController.PickUpMask();
+
+            if(mask != Masks.NONE)
+            {
+                unlockedMasks[mask] = true;
+                Debug.Log("Unlocked " + mask + ": " + unlockedMasks[mask]);
             }
         }
     }
