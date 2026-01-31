@@ -580,8 +580,9 @@ GameObject:
   - component: {fileID: 1553440460}
   - component: {fileID: 1553440459}
   - component: {fileID: 1553440458}
-  m_Layer: 0
-  m_Name: Sphere
+  - component: {fileID: 1553440462}
+  m_Layer: 8
+  m_Name: Sphere - Mask obj
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -680,6 +681,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1553440462
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1553440457}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5140a64c69f60334aaf5d93ea078d39a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MaskObject
+  mask: 3
 --- !u!1 &1638138737 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 1d5af41c50d284c41936a4b24f56c94a, type: 3}
@@ -1315,7 +1329,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4491260912288280717, guid: 76fae986c3eb0bd4b89a8013736b37f1, type: 3}
       propertyPath: m_ActionEvents.Array.data[2].m_PersistentCalls.m_Calls.Array.size
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4491260912288280717, guid: 76fae986c3eb0bd4b89a8013736b37f1, type: 3}
       propertyPath: m_ActionEvents.Array.data[3].m_PersistentCalls.m_Calls.Array.size
@@ -1368,7 +1382,7 @@ PrefabInstance:
     - target: {fileID: 4491260912288280717, guid: 76fae986c3eb0bd4b89a8013736b37f1, type: 3}
       propertyPath: m_ActionEvents.Array.data[2].m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 699082323}
     - target: {fileID: 4491260912288280717, guid: 76fae986c3eb0bd4b89a8013736b37f1, type: 3}
       propertyPath: m_ActionEvents.Array.data[3].m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
@@ -1423,7 +1437,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4491260912288280717, guid: 76fae986c3eb0bd4b89a8013736b37f1, type: 3}
       propertyPath: m_ActionEvents.Array.data[2].m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: OnMaskChange
+      value: UnlockMask
       objectReference: {fileID: 0}
     - target: {fileID: 4491260912288280717, guid: 76fae986c3eb0bd4b89a8013736b37f1, type: 3}
       propertyPath: m_ActionEvents.Array.data[3].m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
