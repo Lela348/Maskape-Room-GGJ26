@@ -30,7 +30,7 @@
                     "id": "bc659f46-0c45-403c-afd9-911247954b07",
                     "expectedControlType": "",
                     "processors": "",
-                    "interactions": "",
+                    "interactions": "Press",
                     "initialStateCheck": false
                 },
                 {
@@ -41,6 +41,24 @@
                     "processors": "",
                     "interactions": "Press(pressPoint=1)",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "ChangeMask",
+                    "type": "Button",
+                    "id": "59e90d6a-2e32-4a78-9cd3-b46f335ddda7",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "Press",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Debug_Scale",
+                    "type": "Button",
+                    "id": "c7503bc1-adff-4305-8bac-c0fdd69c16b0",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "Press",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -162,6 +180,39 @@
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
                     "action": "Grab",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f8ab815f-370d-4b94-900e-b5ea96120018",
+                    "path": "<Keyboard>/1",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "ChangeMask",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f6ebb540-6eeb-4241-964e-913f92cd8ed2",
+                    "path": "<Keyboard>/2",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "ChangeMask",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "fad0b9f5-63e2-468a-94a9-6e105e984b16",
+                    "path": "<Keyboard>/rightBracket",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "Debug_Scale",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
