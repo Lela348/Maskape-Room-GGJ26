@@ -5,7 +5,7 @@ public class PlayerController : MonoBehaviour
 {
 
     [SerializeField] private float speed = 1.0f;
-    [SerializeField] private int sensitivity;
+    [SerializeField] private Vector2 sensitivity;
     [SerializeField] private float maxVerticalAngle;
     [SerializeField] private Camera cam;
 
@@ -35,6 +35,11 @@ public class PlayerController : MonoBehaviour
 
         transform.rotation = Quaternion.Euler(0f, rotation.x, 0f);
         cam.transform.rotation = Quaternion.Euler(-rotation.y, rotation.x, 0f);
+    }
+
+    private void FixedUpdate()
+    {
+        Debug.DrawRay(transform.position, cam.transform.TransformDirection(Vector3.forward) * 2, Color.white);
     }
 
     public void OnMove(InputAction.CallbackContext context)
