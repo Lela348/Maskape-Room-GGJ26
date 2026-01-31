@@ -59,6 +59,15 @@
                     "processors": "",
                     "interactions": "Press",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Debug_change_Gravity",
+                    "type": "Button",
+                    "id": "4724bd58-7b9e-4128-92f6-7b6c5f535984",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "Press",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -213,6 +222,17 @@
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
                     "action": "Debug_Scale",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "9c4522ee-71b8-4fa4-9c59-fae966b997f7",
+                    "path": "<Keyboard>/backslash",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Debug_change_Gravity",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

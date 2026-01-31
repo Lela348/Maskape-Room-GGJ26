@@ -4,24 +4,26 @@ using UnityEngine.InputSystem.Interactions;
 
 public class PlayerController : MonoBehaviour
 {
-
+    #region Varibales
     [SerializeField] private float speed = 1.0f;
     [SerializeField] private Vector2 sensitivity;
     [SerializeField] private float maxVerticalAngle;
     [SerializeField] private Camera cam;
 
+    private CapsuleCollider capsuleCollider;
     private CharacterController characterController;
     private Vector2 moveVec2 = Vector2.zero;
-    private Vector2 rotation = Vector2.zero;
+    private Vector3 rotation = Vector3.zero;
     private Vector2 mouseInputVec2 = Vector2.zero;
 
     private Ray ray;
     private RaycastHit hitData;
-    private LayerMask layerMask;
-    private Vector3 offset;
+    private LayerMask layerMaskObjects;
+    private LayerMask layerMaskGround;
     private Vector3 playerVelocity;
 
-    private const float GRAVITY = -9.81f;
+    private float gravity = -9.81f;
+    
     private const float DISTANCE = 2.5f;
     private const float GRAB_POS_X = 0.5f;
     private const float GRAB_POS_Y = 0.25f;
@@ -32,41 +34,52 @@ public class PlayerController : MonoBehaviour
 
     private bool isSmall = false;
     private bool groundedPlayer;
+    private float inverseLookMultiplier = 1.0f;
+    #endregion
 
     private void Awake()
     {
-        layerMask = LayerMask.GetMask("Interactable Object");
+        layerMaskObjects = LayerMask.GetMask("Interactable Object");
+        layerMaskGround = LayerMask.GetMask("Ground");
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         characterController = GetComponent<CharacterController>();
+        capsuleCollider = GetComponent<CapsuleCollider>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        groundedPlayer = characterController.isGrounded;
+        float time = Time.time;
+
+        groundedPlayer = IsGrounded();
+        Debug.Log("Grounded call: " + IsGrounded());
         if (groundedPlayer)
         {
+            Debug.Log("Player is grounded");
             playerVelocity.y = 0f;
         }
 
+        // Player movement
         Vector3 movement = transform.right * moveVec2.x + transform.forward * moveVec2.y;
         movement = Vector3.ClampMagnitude(movement, 1f);
-        playerVelocity.y += GRAVITY * Time.deltaTime;
+        playerVelocity.y += gravity * Time.deltaTime;
 
         Vector3 finalMove = (movement * speed) + (playerVelocity.y * Vector3.up);
         characterController.Move(finalMove * Time.deltaTime);
 
+        // Camera rotation
         Vector2 mouseVelocity = mouseInputVec2 * sensitivity;
 
-        rotation += mouseVelocity * Time.deltaTime;
+        rotation += new Vector3(mouseVelocity.x * Time.deltaTime, mouseVelocity.y * Time.deltaTime, 0f);
         rotation.y = Mathf.Clamp(rotation.y, -maxVerticalAngle, maxVerticalAngle);
 
-        transform.rotation = Quaternion.Euler(0f, rotation.x, 0f);
-        cam.transform.rotation = Quaternion.Euler(-rotation.y, rotation.x, 0f);
+        transform.rotation = Quaternion.Euler(0f, rotation.x, rotation.z);
+        cam.transform.rotation = Quaternion.Euler(-rotation.y, rotation.x, rotation.z);
+
 
         if (holdObject != null)
         {
@@ -89,7 +102,7 @@ public class PlayerController : MonoBehaviour
 
     public void OnLook(InputAction.CallbackContext context)
     {
-        mouseInputVec2 = context.ReadValue<Vector2>();
+        mouseInputVec2 = context.ReadValue<Vector2>() * inverseLookMultiplier;
     }
 
     public void OnGrab(InputAction.CallbackContext context)
@@ -99,7 +112,7 @@ public class PlayerController : MonoBehaviour
             Debug.Log("Grab function called");
             if (holdObject == null)
             {
-                if (Physics.Raycast(ray.origin, ray.direction, out hitData, DISTANCE, layerMask))
+                if (Physics.Raycast(ray.origin, ray.direction, out hitData, DISTANCE, layerMaskObjects))
                 {
                     if (hitData.transform.gameObject)
                     {
@@ -139,6 +152,39 @@ public class PlayerController : MonoBehaviour
             }
             Debug.Log("Transform pos after scale change: " + transform.position);
         }
+    }
 
+    public void OnDebugGravity(InputAction.CallbackContext context)
+    {
+        if (context.started && context.interaction is PressInteraction)
+        {
+
+            if (gravity < 0)
+            {
+                rotation.z = 180f;
+            }
+            else
+            {
+                rotation.z = 0f;
+            }
+
+            gravity *= -1f; 
+            inverseLookMultiplier *= -1f;
+            Debug.Log("Gravity: " + gravity);
+            Debug.Log("inverseLookMultiplier: " + inverseLookMultiplier);
+        }
+    }
+
+    bool IsGrounded()
+    {
+        Vector3 gravityDir = gravity < 0 ? Vector3.down : Vector3.up;
+        float groundCheckDistance = 0.15f + capsuleCollider.height;
+
+        return Physics.Raycast(
+            transform.position,
+            gravityDir,
+            groundCheckDistance,
+            layerMaskGround
+        );
     }
 }
