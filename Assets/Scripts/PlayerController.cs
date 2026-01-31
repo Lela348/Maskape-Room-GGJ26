@@ -191,6 +191,35 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void ChangePlayerGravity(float rotationValue)
+    {
+        rotation.z = rotationValue;
+        gravity *= -1f;
+        inverseLookMultiplier *= -1f;
+    }
+
+    public void ChangeScale(bool makeSmall)
+    {
+        if (makeSmall)
+        {
+            transform.localScale = new Vector3(SCALE_SMALL, SCALE_SMALL, SCALE_SMALL);
+            characterController.Move(new Vector3(0.0f, -SCALE_POSITION_OFFSET, 0.0f));
+            cam.fieldOfView += CAM_FOV_CHANGE_AMOUNT;
+            rayLength /= 2;
+            cam.nearClipPlane = CAM_NEAR_PLAIN_SMALL;
+            cam.farClipPlane = CAM_FAR_PLAIN_SMALL;
+        }
+        else
+        {
+            transform.localScale = Vector3.one;
+            characterController.Move(new Vector3(0.0f, SCALE_POSITION_OFFSET, 0.0f));
+            cam.fieldOfView -= CAM_FOV_CHANGE_AMOUNT;
+            rayLength *= 2;
+            cam.nearClipPlane = CAM_NEAR_PLAIN_OG;
+            cam.farClipPlane = CAM_FAR_PLAIN_OG;
+        }
+    }
+
     bool IsGrounded()
     {
         Vector3 gravityDir = gravity < 0 ? Vector3.down : Vector3.up;
