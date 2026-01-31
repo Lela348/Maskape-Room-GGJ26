@@ -35,6 +35,8 @@ public class PlayerController : MonoBehaviour
     private bool isSmall = false;
     private bool groundedPlayer;
     private float inverseLookMultiplier = 1.0f;
+
+    private float rayLength;
     #endregion
 
     private void Awake()
@@ -48,6 +50,7 @@ public class PlayerController : MonoBehaviour
     {
         characterController = GetComponent<CharacterController>();
         capsuleCollider = GetComponent<CapsuleCollider>();
+        rayLength = (capsuleCollider.height / 2);
     }
 
     // Update is called once per frame
@@ -56,10 +59,9 @@ public class PlayerController : MonoBehaviour
         float time = Time.time;
 
         groundedPlayer = IsGrounded();
-        Debug.Log("Grounded call: " + IsGrounded());
         if (groundedPlayer)
         {
-            Debug.Log("Player is grounded");
+            //Debug.Log("I am grounded");
             playerVelocity.y = 0f;
         }
 
@@ -143,12 +145,14 @@ public class PlayerController : MonoBehaviour
                 transform.localScale = Vector3.one;
                 characterController.Move(new Vector3(0.0f, SCALE_POSITION_OFFSET, 0.0f));
                 isSmall = false;
+                rayLength *= 2;
             }
             else
             {
                 transform.localScale = new Vector3(SCALE_SMALL, SCALE_SMALL, SCALE_SMALL);
                 characterController.Move(new Vector3(0.0f, -SCALE_POSITION_OFFSET, 0.0f));
                 isSmall = true;
+                rayLength /= 2;
             }
             Debug.Log("Transform pos after scale change: " + transform.position);
         }
@@ -158,7 +162,7 @@ public class PlayerController : MonoBehaviour
     {
         if (context.started && context.interaction is PressInteraction)
         {
-
+            Debug.Log("OG rayLength: " + rayLength);
             if (gravity < 0)
             {
                 rotation.z = 180f;
@@ -172,13 +176,16 @@ public class PlayerController : MonoBehaviour
             inverseLookMultiplier *= -1f;
             Debug.Log("Gravity: " + gravity);
             Debug.Log("inverseLookMultiplier: " + inverseLookMultiplier);
+            Debug.Log("Modified rayLength: " + rayLength);
         }
     }
 
     bool IsGrounded()
     {
         Vector3 gravityDir = gravity < 0 ? Vector3.down : Vector3.up;
-        float groundCheckDistance = 0.15f + capsuleCollider.height;
+        float groundCheckDistance = 0.1f + rayLength;
+
+        //Debug.Log("rayLength: " + rayLength);
 
         return Physics.Raycast(
             transform.position,

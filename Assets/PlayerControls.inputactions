@@ -68,6 +68,15 @@
                     "processors": "",
                     "interactions": "Press",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Debug_change_animation_speed",
+                    "type": "Button",
+                    "id": "990242b5-f1ad-49c8-b249-b5021e00b3d0",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "Press",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -233,6 +242,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Debug_change_Gravity",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3d3f2ccd-4316-4e05-b49b-0b38cb887ad3",
+                    "path": "<Keyboard>/equals",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Debug_change_animation_speed",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
