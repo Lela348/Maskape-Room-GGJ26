@@ -29,6 +29,11 @@ public class PlayerController : MonoBehaviour
     private const float GRAB_POS_Y = 0.25f;
     private const float SCALE_SMALL = 0.5f;
     private const float SCALE_POSITION_OFFSET = 0.5f;
+    private const float CAM_NEAR_PLAIN_OG = 0.3f;
+    private const float CAM_NEAR_PLAIN_SMALL = 0.15f;
+    private const float CAM_FAR_PLAIN_OG = 1000f;
+    private const float CAM_FAR_PLAIN_SMALL = 25f;
+    private const float CAM_FOV_CHANGE_AMOUNT = 30;
 
     private GameObject holdObject;
 
@@ -144,15 +149,21 @@ public class PlayerController : MonoBehaviour
             {
                 transform.localScale = Vector3.one;
                 characterController.Move(new Vector3(0.0f, SCALE_POSITION_OFFSET, 0.0f));
-                isSmall = false;
+                cam.fieldOfView -= CAM_FOV_CHANGE_AMOUNT;
                 rayLength *= 2;
+                cam.nearClipPlane = CAM_NEAR_PLAIN_OG;
+                cam.farClipPlane = CAM_FAR_PLAIN_OG;
+                isSmall = false;
             }
             else
             {
                 transform.localScale = new Vector3(SCALE_SMALL, SCALE_SMALL, SCALE_SMALL);
                 characterController.Move(new Vector3(0.0f, -SCALE_POSITION_OFFSET, 0.0f));
-                isSmall = true;
+                cam.fieldOfView += CAM_FOV_CHANGE_AMOUNT;
                 rayLength /= 2;
+                cam.nearClipPlane = CAM_NEAR_PLAIN_SMALL;
+                cam.farClipPlane = CAM_FAR_PLAIN_SMALL;
+                isSmall = true;
             }
             Debug.Log("Transform pos after scale change: " + transform.position);
         }
@@ -180,12 +191,39 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void ChangePlayerGravity(float rotationValue)
+    {
+        rotation.z = rotationValue;
+        gravity *= -1f;
+        inverseLookMultiplier *= -1f;
+    }
+
+    public void ChangeScale(bool makeSmall)
+    {
+        if (makeSmall)
+        {
+            transform.localScale = new Vector3(SCALE_SMALL, SCALE_SMALL, SCALE_SMALL);
+            characterController.Move(new Vector3(0.0f, -SCALE_POSITION_OFFSET, 0.0f));
+            cam.fieldOfView += CAM_FOV_CHANGE_AMOUNT;
+            rayLength /= 2;
+            cam.nearClipPlane = CAM_NEAR_PLAIN_SMALL;
+            cam.farClipPlane = CAM_FAR_PLAIN_SMALL;
+        }
+        else
+        {
+            transform.localScale = Vector3.one;
+            characterController.Move(new Vector3(0.0f, SCALE_POSITION_OFFSET, 0.0f));
+            cam.fieldOfView -= CAM_FOV_CHANGE_AMOUNT;
+            rayLength *= 2;
+            cam.nearClipPlane = CAM_NEAR_PLAIN_OG;
+            cam.farClipPlane = CAM_FAR_PLAIN_OG;
+        }
+    }
+
     bool IsGrounded()
     {
         Vector3 gravityDir = gravity < 0 ? Vector3.down : Vector3.up;
         float groundCheckDistance = 0.1f + rayLength;
-
-        //Debug.Log("rayLength: " + rayLength);
 
         return Physics.Raycast(
             transform.position,
